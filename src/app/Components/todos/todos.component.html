@@ -1,0 +1,41 @@
+<section id="todos">
+
+  <!-- Todo actions helper -->
+  <div class="row">
+    <div class="col-12">
+      <h2>Todos</h2>
+      <div class="row my-4 text-center">
+        <div class="col-4">
+          <span>Double click to mark as complete</span>
+        </div>
+        <div class="col-4">
+          <span> <span class="box incomplete-color"></span> = Incomplete </span>
+        </div>
+        <div class="col-4">
+          <span> <span class="box complete-color"></span> = Complete</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Todos list -->
+  <div class="todos-list" *ngIf="!isLoading">
+    <div class="todos">
+      <div
+        class="todo text-center my-1 shadow"
+        [ngClass]="{ 'is-complete': todo.completed }"
+        *ngFor="let todo of todosList | todoFilter: filterCount"
+        (dblclick)="updateTodo(todo)"
+      >
+        {{ todo.title }}
+        <i class="fas fa-trash-alt" (click)="deleteTodo(todo.id)"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- Spinner -->
+  <div *ngIf="isLoading" class="py-2 my-2">
+    <app-spinner></app-spinner>
+  </div>
+
+</section>

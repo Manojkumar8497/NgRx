@@ -1,0 +1,40 @@
+<section id="add-todo">
+  <div class="row">
+    <div class="col-12">
+      <h2>Add Todo</h2>
+      <!-- Add todo input -->
+      <form>
+        <div class="input-group">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Add todo..."
+            aria-describedby="button-addon4"
+            #title
+          />
+          <div class="input-group-append" id="button-addon4">
+            <button
+              class="btn btn-success"
+              type="button"
+              (click)="addTodo(title.value)"
+              [disabled]="isDisabled"
+            >
+              Submit
+            </button>
+          </div>
+        </div>
+      </form>
+      <!-- Filter todo -->
+      <div class="todos-filter">
+        Filter Todos:
+        <select #filter (change)="OnFilterChange(filter.value)">
+          <option value="200">200</option>
+          <option value="100">100</option>
+          <option value="50">50</option>
+          <option value="10">10</option>
+          <option value="5">5</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</section>

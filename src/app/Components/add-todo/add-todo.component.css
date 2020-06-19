@@ -1,0 +1,31 @@
+.btn {
+  padding: .375rem 5rem;
+  border-radius: 0;
+  font-size: 15px;
+  background-color: slateblue;
+  border-color: slateblue;
+}
+
+.btn-success:not(:disabled):not(.disabled).active, .btn-success:not(:disabled):not(.disabled):active, .show>.btn-success.dropdown-toggle {
+  color: #fff;
+  background-color: slateblue;
+  border-color: slateblue;
+  box-shadow: 0 0 0 0 slateblue;
+}
+
+.btn-success.focus, .btn-success:focus {
+  color: #fff;
+  box-shadow: 0 0 0 0 slateblue;
+}
+
+input.form-control {
+  border-radius: 0;
+  border: 1px solid slateblue;
+  outline: 0;
+}
+
+select {
+  margin-top: 20px;
+  padding: 6px;
+  border: 1px solid slateblue;
+}

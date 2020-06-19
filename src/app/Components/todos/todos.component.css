@@ -1,0 +1,42 @@
+.box {
+  width: 12px;
+  height: 12px;
+  display: inline-block;
+}
+
+.incomplete-color {
+  background-color: slateblue;
+}
+
+.complete-color {
+  background-color: #1abc9c;
+}
+
+.todos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 1rem;
+}
+
+.todo {
+  border: 1px solid #ccc;
+  padding: 1.3rem;
+  border-radius: 5px;
+  position: relative;
+  text-align: center;
+  background: slateblue;
+  color: #ffffff;
+}
+
+i {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.is-complete {
+  background-color: #1abc9c;
+  color: #ffffff;
+}
