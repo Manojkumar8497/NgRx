@@ -3,7 +3,7 @@
     <div class="col-12">
       <h2>Add Todo</h2>
       <!-- Add todo input -->
-      <form>
+      <form (submit)="onSubmit($event)">
         <div class="input-group">
           <input
             type="text"
@@ -15,8 +15,7 @@
           <div class="input-group-append" id="button-addon4">
             <button
               class="btn btn-success"
-              type="button"
-              (click)="addTodo(title.value)"
+              type="submit"
               [disabled]="isDisabled"
             >
               Submit

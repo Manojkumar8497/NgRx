@@ -1,7 +1,10 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { TodoService } from 'src/app/services/todo.service';
-import { Todo } from 'src/app/model/todo.model';
+import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
+
+import { Todo } from 'src/app/model/todo.model';
+import * as fromTodoList from '../../store/todo-list.reducer';
+import * as TodoActions from '../../store/actions/todo-list.actions';
 
 @Component({
   selector: 'app-add-todo',
@@ -14,41 +17,32 @@ export class AddTodoComponent implements OnInit {
   filterChange = new Subject<number>();
   @ViewChild('title') title: ElementRef;
 
-  constructor(private todoService: TodoService) { }
+  constructor(private store: Store<fromTodoList.TodoState>) { }
 
-  addTodo(title: string) {
+  onSubmit(event: Event) {
+    event.preventDefault();
+    const title = this.title.nativeElement.value;
     if (title) {
-      this.isDisabled = true;
       const randomNum = Math.floor(Math.random() * 1000);
+      const userId = Math.floor(Math.random() * 10);
       const todo: Todo = {
         id: randomNum,
-        title,
-        completed: false
+        title: title,
+        completed: false,
+        userId: userId
       }
-      this.onLoading();
-      // Send the todo data to todoService
-      this.todoService.post(todo).subscribe(
-        () => {
-          this.title.nativeElement.value = "";
-          this.isDisabled = false;
-        },
-        err => {
-          console.log(err.message);
-        });
+      this.store.dispatch(new TodoActions.AddTodoStart(todo));
     }
   }
 
   OnFilterChange(value: number) {
-    this.onLoading();
-    this.todoService.filterTodos(value);
-  }
-
-  onLoading() {
-    this.todoService.isLoadingChanged.next();
+    this.store.dispatch(new TodoActions.FilterTodoStart(value));
   }
 
   ngOnInit(): void {
-
+    this.store.select('todoList').subscribe((responseData: fromTodoList.State) => {
+      this.isDisabled = responseData.isLoading;
+    });
   }
 
 }

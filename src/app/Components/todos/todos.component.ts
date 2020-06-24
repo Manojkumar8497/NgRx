@@ -1,7 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Todo } from 'src/app/model/todo.model';
-import { TodoService } from 'src/app/services/todo.service';
+import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
+
+import { Todo } from 'src/app/model/todo.model';
+// Reducer & Actions
+import * as fromTodoList from '../../store/todo-list.reducer';
+import * as TodoActions from '../../store/actions/todo-list.actions';
 
 @Component({
   selector: 'app-todos',
@@ -12,56 +16,50 @@ export class TodosComponent implements OnInit, OnDestroy {
 
   todosList: Todo[];
   filterCount: number;
-  isLoading: boolean;
-  todoSubscription: Subscription;
-  filterSubscription: Subscription;
-  loadingSubscription: Subscription;
+  isLoading: boolean = false;
+  errorMessage: string = null;
+  storeSub: Subscription;
 
-  constructor(public todoService: TodoService) {
+  constructor(private store: Store<fromTodoList.TodoState>) {
     this.todosList = new Array<Todo>();
-    this.isLoading = true;
+  }
+
+  // Tod get the todos data
+  getTodos() {
+    this.store.dispatch(new TodoActions.GetTodosStart());
+
+    this.storeSub = this.store.select('todoList').subscribe((response: fromTodoList.State) => {
+      this.todosList = response.todos;
+      this.isLoading = response.isLoading;
+      this.errorMessage = response.todoError;
+      this.filterCount = response.filterCount;
+    })
   }
 
   // To update the completed state
   updateTodo(todo: Todo) {
-    todo.completed = !todo.completed;
-    this.todoService.patch(todo);
+    const updatedTodo: Todo = {
+      userId: todo.userId,
+      id: todo.id,
+      title: todo.title,
+      completed: !todo.completed
+    };
+    this.store.dispatch(new TodoActions.UpdateTodoStart(updatedTodo));
   }
 
   // To delete a single Todo
   deleteTodo(id: number) {
-    this.isLoading = true;
-    this.todoService.delete(id);
+    this.store.dispatch(new TodoActions.DeleteTodoStart(id));
   }
 
   ngOnInit(): void {
-    // Getting the todo data
-    this.todoService.get().subscribe(() => {
-      this.todosList = this.todoService.getTodos();
-      this.isLoading = false;
-    });
-    // Update the data once we recive the subject data
-    this.todoSubscription = this.todoService.todosListUpdated.subscribe((todos: Todo[]) => {
-      this.todosList = todos;
-      this.isLoading = false;
-    });
-    // Update the filter count once we recive the subject data
-    this.filterSubscription = this.todoService.todosLimitUpdated.subscribe((limit: number) => {
-      this.filterCount = limit;
-      setTimeout(() => {
-        this.isLoading = false;
-      }, 1000);
-    })
-    // Update the lodaing status once we recive the subject data
-    this.loadingSubscription = this.todoService.isLoadingChanged.subscribe(() => {
-      this.isLoading = true;
-    });
+    this.getTodos();
   }
 
   ngOnDestroy(): void {
-    this.todoSubscription.unsubscribe();
-    this.filterSubscription.unsubscribe();
-    this.loadingSubscription.unsubscribe();
+    if (this.storeSub) {
+      this.storeSub.unsubscribe();
+    }
   }
 
 }

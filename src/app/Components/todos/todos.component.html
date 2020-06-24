@@ -1,5 +1,4 @@
 <section id="todos">
-
   <!-- Todo actions helper -->
   <div class="row">
     <div class="col-12">
@@ -17,6 +16,9 @@
       </div>
     </div>
   </div>
+
+  <!-- Error Alert -->
+  <app-alert [message]="errorMessage" *ngIf="errorMessage"></app-alert>
 
   <!-- Todos list -->
   <div class="todos-list" *ngIf="!isLoading">
@@ -37,5 +39,4 @@
   <div *ngIf="isLoading" class="py-2 my-2">
     <app-spinner></app-spinner>
   </div>
-
 </section>
